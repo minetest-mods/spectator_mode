@@ -13,7 +13,7 @@ minetest.register_chatcommand("watch", {
 		local watched_player_name = minetest.get_player_by_name(watched)
 		original_pos[watcher] = watcher:getpos()
 
-		if watched and watched_player_name and watcher and
+		if name ~= watched and watched and watched_player_name and watcher and
 				default.player_attached[name] == false then
 
 			default.player_attached[name] = true
@@ -35,7 +35,7 @@ minetest.register_chatcommand("watch", {
 			return true, "Watching '"..watched.."' at "..minetest.pos_to_string(vector.round(watched_player_name:getpos())).."..."
 		end
 
-		return false, "Invalid parameters ('"..param.."'), or player not found, or you're already watching a player."
+		return false, "Invalid parameters ('"..param.."') or you're already watching a player."
 	end
 })
 
