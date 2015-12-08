@@ -12,6 +12,7 @@ minetest.register_chatcommand("watch", {
 		watched = param:match("^([^ ]+)$")
 		local watched_player_name = minetest.get_player_by_name(watched)
 		original_pos[watcher] = watcher:getpos()
+		local privs = minetest.get_player_privs(name)
 
 		if name ~= watched and watched and watched_player_name and watcher and
 				default.player_attached[name] == false then
@@ -32,6 +33,9 @@ minetest.register_chatcommand("watch", {
 				collisionbox = {0, 0, 0, 0, 0, 0}
 			})
 
+			privs.interact = nil
+			minetest.set_player_privs(name, privs)
+
 			return true, "Watching '"..watched.."' at "..minetest.pos_to_string(vector.round(watched_player_name:getpos())).."..."
 		end
 
@@ -45,6 +49,7 @@ minetest.register_chatcommand("unwatch", {
 	func = function(name, param)
 		local watcher = nil
 		watcher = minetest.get_player_by_name(name)
+		local privs = minetest.get_player_privs(name)
 
 		if watcher and default.player_attached[name] == true then
 			watcher:set_detach()
@@ -63,6 +68,9 @@ minetest.register_chatcommand("unwatch", {
 				collisionbox = {-0.3, -1, -0.3, 0.3, 1, 0.3}
 			})
 
+			privs.interact = true
+			minetest.set_player_privs(name, privs)
+
 			minetest.after(0.1, function()
 				watcher:setpos(original_pos[watcher])
 			end)
@@ -76,4 +84,14 @@ minetest.register_chatcommand("unwatch", {
 		return false, "You're not watching a player currently."
 	end
 })
+
+minetest.register_on_leaveplayer(function(player)
+	local name = player:get_player_name()
+	local privs = minetest.get_player_privs(name)
+
+	if not privs.interact and privs.watch == true then
+		privs.interact = true
+		minetest.set_player_privs(name, privs)
+	end
+end)
 
