@@ -10,16 +10,16 @@ minetest.register_chatcommand("watch", {
 		local watcher, watched = nil, nil
 		watcher = minetest.get_player_by_name(name)
 		watched = param:match("^([^ ]+)$")
-		local watched_player_name = minetest.get_player_by_name(watched)
+		local watched_player = minetest.get_player_by_name(watched)
 		original_pos[watcher] = watcher:getpos()
 		local privs = minetest.get_player_privs(name)
 
-		if name ~= watched and watched and watched_player_name and watcher and
+		if name ~= watched and watched and watched_player and watcher and
 				default.player_attached[name] == false then
 
 			default.player_attached[name] = true
-			watcher:set_attach(watched_player_name, "", {x=0, y=10, z=-20}, {x=0, y=0, z=0})
-			watcher:set_eye_offset({x=0, y=10, z=-20},{x=0, y=0, z=0})
+			watcher:set_attach(watched_player, "", {x=0, y=5, z=-20}, {x=0, y=0, z=0})
+			watcher:set_eye_offset({x=0, y=5, z=-20},{x=0, y=0, z=0})
 			watcher:set_nametag_attributes({color = {a=0}})
 
 			watcher:hud_set_flags({
@@ -36,7 +36,7 @@ minetest.register_chatcommand("watch", {
 			privs.interact = nil
 			minetest.set_player_privs(name, privs)
 
-			return true, "Watching '"..watched.."' at "..minetest.pos_to_string(vector.round(watched_player_name:getpos())).."..."
+			return true, "Watching '"..watched.."' at "..minetest.pos_to_string(vector.round(watched_player:getpos()))
 		end
 
 		return false, "Invalid parameters ('"..param.."') or you're already watching a player."
