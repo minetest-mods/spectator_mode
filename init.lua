@@ -13,7 +13,11 @@ minetest.register_chatcommand("watch", {
 		original_pos[watcher] = watcher:getpos()
 		local privs = minetest.get_player_privs(name)
 
-		if target and watcher ~= target and default.player_attached[name] == false then
+		if target and watcher ~= target then
+			if default.player_attached[name] == true then 
+				unswitching(name)
+				
+				end
 			default.player_attached[name] = true
 			watcher:set_attach(target, "", {x=0, y=5, z=-20}, {x=0, y=0, z=0})
 			watcher:set_eye_offset({x=0, y=5, z=-20},{x=0, y=0, z=0})
@@ -38,7 +42,7 @@ minetest.register_chatcommand("watch", {
 			return true, "Watching '"..param.."' at "..minetest.pos_to_string(vector.round(target:getpos()))
 		end
 
-		return false, "Invalid parameters ('"..param.."') or you're already watching a player."
+		return false, "Invalid parameters ('"..param.."')"
 	end
 })
 
