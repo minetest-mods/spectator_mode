@@ -14,10 +14,8 @@ minetest.register_chatcommand("watch", {
 		local privs = minetest.get_player_privs(name)
 
 		if target and watcher ~= target then
-			if default.player_attached[name] == true then 
-				unswitching(name)
-				
-				end
+			if default.player_attached[name] == true then unwatching(name) end
+			
 			default.player_attached[name] = true
 			watcher:set_attach(target, "", {x=0, y=5, z=-20}, {x=0, y=0, z=0})
 			watcher:set_eye_offset({x=0, y=5, z=-20},{x=0, y=0, z=0})
