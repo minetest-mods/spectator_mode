@@ -3,21 +3,22 @@ local original_pos = {}
 minetest.register_privilege("watch", "Player can watch other players")
 
 local function unwatching(name)
-	local watcher = nil
-	watcher = minetest.get_player_by_name(name)
+	local watcher = minetest.get_player_by_name(name)
 	local privs = minetest.get_player_privs(name)
 
 	if watcher and default.player_attached[name] == true then
 		watcher:set_detach()
 		default.player_attached[name] = false
-		watcher:set_eye_offset({x=0, y=0, z=0},{x=0, y=0, z=0})
+		watcher:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
 		watcher:set_nametag_attributes({color = {a=255, r=255, g=255, b=255}})
 
 		watcher:hud_set_flags({
-			hotbar = true,
 			healthbar = true,
-			crosshair = true,
-			wielditem = true
+			minimap = true,
+			breathbar = true,
+			hotbar = true,
+			wielditem = true,
+			crosshair = true
 		})
 
 		watcher:set_properties({
@@ -48,9 +49,8 @@ minetest.register_chatcommand("watch", {
 	description = "watch a given player",
 	privs = {watch=true},
 	func = function(name, param)
-		local watcher, target = nil, nil
-		watcher = minetest.get_player_by_name(name)
-		target = minetest.get_player_by_name(param:match("^([^ ]+)$"))
+		local watcher = minetest.get_player_by_name(name)
+		local target = minetest.get_player_by_name(param:match("^([^ ]+)$"))
 		local privs = minetest.get_player_privs(name)
 
 		if target and watcher ~= target then
@@ -61,21 +61,23 @@ minetest.register_chatcommand("watch", {
 			end
 		
 			default.player_attached[name] = true
-			watcher:set_attach(target, "", {x=0, y=5, z=-20}, {x=0, y=0, z=0})
-			watcher:set_eye_offset({x=0, y=5, z=-20},{x=0, y=0, z=0})
+			watcher:set_attach(target, "", {x=0, y=-5, z=-20}, {x=0, y=0, z=0})
+			watcher:set_eye_offset({x=0, y=-5, z=-20}, {x=0, y=0, z=0})
 			watcher:set_nametag_attributes({color = {a=0}})
 
 			watcher:hud_set_flags({
-				hotbar = false,
 				healthbar = false,
-				crosshair = false,
-				wielditem = false
+				minimap = false,
+				breathbar = false,
+				hotbar = false,
+				wielditem = false,
+				crosshair = false
 			})
 
 			watcher:set_properties({
 				visual_size = {x=0, y=0},
 				makes_footstep_sound = false,
-				collisionbox = {0, 0, 0, 0, 0, 0}
+				collisionbox = {0}
 			})
 
 			privs.interact = nil
