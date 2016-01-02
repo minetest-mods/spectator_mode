@@ -50,7 +50,7 @@ minetest.register_chatcommand("watch", {
 	privs = {watch=true},
 	func = function(name, param)
 		local watcher = minetest.get_player_by_name(name)
-		local target = minetest.get_player_by_name(param:match("^([^ ]+)$"))
+		local target = minetest.get_player_by_name(param)
 		local privs = minetest.get_player_privs(name)
 
 		if target and watcher ~= target then
