@@ -103,10 +103,3 @@ minetest.register_on_leaveplayer(function(player)
 	unwatching(name)
 end)
 
-minetest.register_globalstep(function()
-	for player in pairs(original_pos) do
-		player:set_hp(20)
-		player:set_breath(20)
-	end
-end)
-
