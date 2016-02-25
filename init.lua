@@ -35,12 +35,9 @@ local function unwatching(name)
 		if original_pos[watcher] then
 			minetest.after(0.1, function()
 				watcher:setpos(original_pos[watcher])
+				original_pos[watcher] = {}
 			end)
 		end
-
-		minetest.after(0.2, function()
-			original_pos[watcher] = {}
-		end)
 	end
 end
 
