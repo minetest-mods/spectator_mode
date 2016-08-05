@@ -32,11 +32,14 @@ local function unwatching(name)
 			minetest.set_player_privs(name, privs)
 		end
 
-		if original_pos[watcher] then
+		local pos = original_pos[watcher]
+		if pos then
+			-- setpos seems to be very unreliable
+			-- this workaround helps though
 			minetest.after(0.1, function()
-				watcher:setpos(original_pos[watcher])
-				original_pos[watcher] = {}
+				watcher:setpos(pos)
 			end)
+			original_pos[watcher] = nil
 		end
 	end
 end
