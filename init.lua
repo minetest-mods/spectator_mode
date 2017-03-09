@@ -2,6 +2,17 @@ local original_pos = {}
 
 minetest.register_privilege("watch", "Player can watch other players")
 
+local function toggle_hud_flags(player, bool)
+	local flags = player:hud_get_flags()
+	local new_hud_flags = {}
+
+	for flag in pairs(flags) do
+		new_hud_flags[flag] = bool
+	end
+
+	player:hud_set_flags(new_hud_flags)
+end
+
 local function unwatching(name)
 	local watcher = minetest.get_player_by_name(name)
 	local privs = minetest.get_player_privs(name)
@@ -9,20 +20,13 @@ local function unwatching(name)
 	if watcher and default.player_attached[name] == true then
 		watcher:set_detach()
 		default.player_attached[name] = false
-		watcher:set_eye_offset({x=0, y=0, z=0}, {x=0, y=0, z=0})
-		watcher:set_nametag_attributes({color = {a=255, r=255, g=255, b=255}})
+		watcher:set_eye_offset(vector.new(), vector.new())
+		watcher:set_nametag_attributes({color = {a = 255, r = 255, g = 255, b = 255}})
 
-		watcher:hud_set_flags({
-			healthbar = true,
-			minimap = true,
-			breathbar = true,
-			hotbar = true,
-			wielditem = true,
-			crosshair = true
-		})
+		toggle_hud_flags(watcher, true)
 
 		watcher:set_properties({
-			visual_size = {x=1, y=1},
+			visual_size = {x = 1, y = 1},
 			makes_footstep_sound = true,
 			collisionbox = {-0.3, -1, -0.3, 0.3, 1, 0.3}
 		})
@@ -47,7 +51,7 @@ end
 minetest.register_chatcommand("watch", {
 	params = "<to_name>",
 	description = "watch a given player",
-	privs = {watch=true},
+	privs = {watch = true},
 	func = function(name, param)
 		local watcher = minetest.get_player_by_name(name)
 		local target = minetest.get_player_by_name(param)
@@ -61,21 +65,14 @@ minetest.register_chatcommand("watch", {
 			end
 
 			default.player_attached[name] = true
-			watcher:set_attach(target, "", {x=0, y=-5, z=-20}, {x=0, y=0, z=0})
-			watcher:set_eye_offset({x=0, y=-5, z=-20}, {x=0, y=0, z=0})
-			watcher:set_nametag_attributes({color = {a=0}})
+			watcher:set_attach(target, "", vector.new(0, -5, -20), vector.new())
+			watcher:set_eye_offset(vector.new(0, -15, 0), vector.new())
+			watcher:set_nametag_attributes({color = {a = 0}})
 
-			watcher:hud_set_flags({
-				healthbar = false,
-				minimap = false,
-				breathbar = false,
-				hotbar = false,
-				wielditem = false,
-				crosshair = false
-			})
+			toggle_hud_flags(watcher, true)
 
 			watcher:set_properties({
-				visual_size = {x=0, y=0},
+				visual_size = {x = 0, y = 0},
 				makes_footstep_sound = false,
 				collisionbox = {0}
 			})
@@ -83,10 +80,11 @@ minetest.register_chatcommand("watch", {
 			privs.interact = nil
 			minetest.set_player_privs(name, privs)
 
-			return true, "Watching '"..param.."' at "..minetest.pos_to_string(vector.round(target:getpos()))
+			return true, "Watching '" .. param .. "' at "..
+				minetest.pos_to_string(vector.round(target:getpos()))
 		end
 
-		return false, "Invalid parameter ('"..param.."')."
+		return false, "Invalid parameter ('" .. param .. "')."
 	end
 })
 
