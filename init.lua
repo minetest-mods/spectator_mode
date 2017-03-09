@@ -59,7 +59,7 @@ minetest.register_chatcommand("watch", {
 			else
 				original_pos[watcher] = watcher:getpos()
 			end
-		
+
 			default.player_attached[name] = true
 			watcher:set_attach(target, "", {x=0, y=-5, z=-20}, {x=0, y=0, z=0})
 			watcher:set_eye_offset({x=0, y=-5, z=-20}, {x=0, y=0, z=0})
@@ -93,7 +93,7 @@ minetest.register_chatcommand("watch", {
 minetest.register_chatcommand("unwatch", {
 	description = "unwatch a player",
 	privs = {watch=true},
-	func = function(name, param)	
+	func = function(name, param)
 		unwatching(name)
 	end
 })
@@ -102,4 +102,3 @@ minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	unwatching(name)
 end)
-
