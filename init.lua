@@ -66,7 +66,7 @@ minetest.register_chatcommand("watch", {
 
 			default.player_attached[name] = true
 			watcher:set_attach(target, "", vector.new(0, -5, -20), vector.new())
-			watcher:set_eye_offset(vector.new(0, -15, 0), vector.new())
+			watcher:set_eye_offset(vector.new(0, -5, -20), vector.new())
 			watcher:set_nametag_attributes({color = {a = 0}})
 
 			toggle_hud_flags(watcher, true)
