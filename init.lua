@@ -1,6 +1,10 @@
 local original_pos = {}
 
-minetest.register_privilege("watch", "Player can watch other players")
+minetest.register_privilege("watch", {
+	description = "Player can watch other players",
+	give_to_singleplayer = false,
+	give_to_admin = true,
+})
 
 local function toggle_hud_flags(player, bool)
 	local flags = player:hud_get_flags()
