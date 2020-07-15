@@ -32,7 +32,7 @@ local function unwatching(name)
 		watcher:set_properties({
 			visual_size = {x = 1, y = 1},
 			makes_footstep_sound = true,
-			collisionbox = {-0.3, -1, -0.3, 0.3, 1, 0.3}
+			collisionbox = {-0.3, 0.0, -0.3, 0.3, 1.7, 0.3}
 		})
 
 		if not privs.interact and privs.watch == true then
