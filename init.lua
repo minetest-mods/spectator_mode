@@ -87,8 +87,8 @@ minetest.register_chatcommand("watch", {
 			collisionbox = {0}
 		})
 
-		privs.interact = nil
-		minetest.set_player_privs(name_watcher, privs)
+		privs_watcher.interact = nil
+		minetest.set_player_privs(name_watcher, privs_watcher)
 
 		return true, 'Watching "' .. name_target .. '" at '
 			.. minetest.pos_to_string(vector.round(target:get_pos()))
