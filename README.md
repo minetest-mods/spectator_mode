@@ -19,3 +19,11 @@ This mod requires MT 5.0.0 and above.
 
 `/watch <player name>`<br>
 `/unwatch` (get back to your initial position)
+
+## Copyright
+
+Original mod DWTFYW Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+Since 20220208 LGPLv3 and CC-BY-SA-3.0 [see LICENSE](LICENSE)
+The LGPLv3 applies to all code in this project.
+The CC-BY-SA-3.0 license applies to textures and any other content in this project which is not source code.
+
