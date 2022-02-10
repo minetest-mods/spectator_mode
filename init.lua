@@ -57,14 +57,20 @@ minetest.register_chatcommand("watch", {
 	description = "Watch a given player",
 	privs = {watch = true},
 	func = function(name_watcher, name_target)
-		if name_watcher == name_target then return true, "You may not watch yourself" end
+		if name_watcher == name_target then
+			return true, "You may not watch yourself"
+		end
 
 		local target = minetest.get_player_by_name(name_target)
 
-		if not target then return true, "Invalid target name" end
+		if not target then
+			return true, "Unknown target player name"
+		end
 
 		-- avoid infinite loops
-		if original_pos[name_target] then return true, name_target .. " is already watching some player." end
+		if original_pos[name_target] then
+			return true, name_target .. " is already watching a player."
+		end
 
 		local watcher = minetest.get_player_by_name(name_watcher)
 		local privs_watcher = minetest.get_player_privs(name_watcher)
