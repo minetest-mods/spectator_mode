@@ -50,7 +50,9 @@ local function detach(name)
 	if pos then
 		-- set_pos seems to be very unreliable
 		-- this workaround helps though
-		minetest.after(0.1, function() watcher:set_pos(pos) end)
+		minetest.after(0.1, function()
+        watcher:set_pos(pos)
+    end)
 	end
 	original_state[name] = nil
 end
@@ -60,15 +62,21 @@ minetest.register_chatcommand("watch", {
 	description = "Watch a given player",
 	privs = {watch = true},
 	func = function(name_watcher, name_target)
-		if name_watcher == name_target then return true, "You may not watch yourself." end
+		if name_watcher == name_target then
+			return true, "You may not watch yourself."
+		end
 
 		local target = minetest.get_player_by_name(name_target)
 
-		if not target then return true, 'Invalid target name "' .. name_target .. '"' end
+		if not target then
+			return true, 'Invalid target name "' .. name_target .. '"'
+		end
 
 		-- avoid infinite loops
-		if original_state[name_target] then return true, '"' .. name_target .. '" is watching "'
-			.. original_state[name_target].target .. '". You may not watch a watcher.' end
+		if original_state[name_target] then
+			return true, '"' .. name_target .. '" is watching "'
+				.. original_state[name_target].target .. '". You may not watch a watcher.'
+		end
 
 		local watcher = minetest.get_player_by_name(name_watcher)
 		if player_api.player_attached[name_watcher] == true then
@@ -105,7 +113,6 @@ minetest.register_chatcommand("watch", {
 
 		return true, 'Watching "' .. name_target .. '" at '
 			.. minetest.pos_to_string(vector.round(target:get_pos()))
-
 	end
 })
 
