@@ -40,14 +40,14 @@ local function unwatching(name)
 			minetest.set_player_privs(name, privs)
 		end
 
-		local pos = original_pos[watcher]
+		local pos = original_pos[name]
 		if pos then
 			-- set_pos seems to be very unreliable
 			-- this workaround helps though
 			minetest.after(0.1, function()
 				watcher:set_pos(pos)
 			end)
-			original_pos[watcher] = nil
+			original_pos[name] = nil
 		end
 	end
 end
@@ -56,39 +56,49 @@ minetest.register_chatcommand("watch", {
 	params = "<to_name>",
 	description = "Watch a given player",
 	privs = {watch = true},
-	func = function(name, param)
-		local watcher = minetest.get_player_by_name(name)
-		local target = minetest.get_player_by_name(param)
-		local privs = minetest.get_player_privs(name)
-
-		if target and watcher ~= target then
-			if player_api.player_attached[name] == true then
-				unwatching(param)
-			else
-				original_pos[watcher] = watcher:get_pos()
-			end
-
-			player_api.player_attached[name] = true
-			watcher:set_attach(target, "", vector.new(0, -5, -20), vector.new())
-			watcher:set_eye_offset(vector.new(0, -5, -20), vector.new())
-			watcher:set_nametag_attributes({color = {a = 0}})
-
-			toggle_hud_flags(watcher, true)
-
-			watcher:set_properties({
-				visual_size = {x = 0, y = 0},
-				makes_footstep_sound = false,
-				collisionbox = {0}
-			})
-
-			privs.interact = nil
-			minetest.set_player_privs(name, privs)
-
-			return true, "Watching '" .. param .. "' at "..
-				minetest.pos_to_string(vector.round(target:get_pos()))
+	func = function(name_watcher, name_target)
+		if name_watcher == name_target then
+			return true, "You may not watch yourself"
 		end
 
-		return false, "Invalid parameter ('" .. param .. "')."
+		local target = minetest.get_player_by_name(name_target)
+
+		if not target then
+			return true, "Unknown target player name"
+		end
+
+		-- avoid infinite loops
+		if original_pos[name_target] then
+			return true, name_target .. " is already watching a player."
+		end
+
+		local watcher = minetest.get_player_by_name(name_watcher)
+		local privs_watcher = minetest.get_player_privs(name_watcher)
+
+		if player_api.player_attached[name_watcher] == true then
+			unwatching(name_watcher)
+		end
+		original_pos[name_watcher] = watcher:get_pos()
+
+		player_api.player_attached[name_watcher] = true
+		watcher:set_attach(target, "", vector.new(0, -5, -20), vector.new())
+		watcher:set_eye_offset(vector.new(0, -5, -20), vector.new())
+		watcher:set_nametag_attributes({color = {a = 0}})
+
+		toggle_hud_flags(watcher, true)
+
+		watcher:set_properties({
+			visual_size = {x = 0, y = 0},
+			makes_footstep_sound = false,
+			collisionbox = {0}
+		})
+
+		privs_watcher.interact = nil
+		minetest.set_player_privs(name_watcher, privs_watcher)
+
+		return true, 'Watching "' .. name_target .. '" at '
+			.. minetest.pos_to_string(vector.round(target:get_pos()))
+
 	end
 })
 
