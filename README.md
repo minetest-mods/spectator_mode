@@ -1,6 +1,6 @@
 # Spectator Mode
-[![luacheck](https://github.com/SwissalpS/spectator_mode/workflows/luacheck/badge.svg)](https://github.com/SwissalpS/spectator_mode/actions)
-[![mineunit](https://github.com/SwissalpS/spectator_mode/workflows/mineunit/badge.svg)](https://github.com/SwissalpS/spectator_mode/actions)
+[![luacheck](https://github.com/minetest-mods/spectator_mode/workflows/luacheck/badge.svg)](https://github.com/minetest-mods/spectator_mode/actions)
+[![mineunit](https://github.com/minetest-mods/spectator_mode/workflows/mineunit/badge.svg)](https://github.com/minetest-mods/spectator_mode/actions)
 [![License](https://img.shields.io/badge/License-LGPLv3%20and%20CC--BY--SA--3.0-green.svg)](LICENSE)
 [![Minetest](https://img.shields.io/badge/Minetest-5.0+-blue.svg)](https://www.minetest.net)
 
