@@ -1,14 +1,13 @@
 --
--- MIT License for spectator_mode code.
+-- MIT License for Mineunit main framework code.
 -- Applies to everything that is not covered with additional copyright notes.
 --
 -- Notes:
+-- MIT license might not apply to code in common, default or game subdirectories.
 -- See notes below MIT license, notes in source code and copyright notes for Minetest.
 --
 
-MIT License
-
-Copyright (c) 2015 Jean-Patrick Guerrero <jeanpatrick.guerrero@gmail.com>
+Copyright (c) 2020 SX <50966843+S-S-X@users.noreply.github.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +26,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
 
 --
 -- Minetest LGPLv2.1 license contents
@@ -51,6 +49,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 --
--- Additional licenses apply, see source files and subdirectories for more information.
+-- Additional licenses apply, see source files for more information.
 --
 

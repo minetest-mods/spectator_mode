@@ -1,7 +1,7 @@
 # Spectator Mode
 [![luacheck](https://github.com/minetest-mods/spectator_mode/workflows/luacheck/badge.svg)](https://github.com/minetest-mods/spectator_mode/actions)
 [![mineunit](https://github.com/minetest-mods/spectator_mode/workflows/mineunit/badge.svg)](https://github.com/minetest-mods/spectator_mode/actions)
-[![License](https://img.shields.io/badge/License-LGPLv3%20and%20CC--BY--SA--3.0-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-MIT%20and%20CC--BY--SA--3.0-green.svg)](LICENSE)
 [![Minetest](https://img.shields.io/badge/Minetest-5.0+-blue.svg)](https://www.minetest.net)
 
 A mod for Minetest allowing you to watch other players in their 3rd person view.
@@ -85,8 +85,8 @@ with their own implementation of<br>
 
 ## Copyright
 
-Original mod DWTFYW Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
-Since 20220208 LGPLv3 and CC-BY-SA-3.0 [see LICENSE](LICENSE)
-The LGPLv3 applies to all code in this project.
+Original mod DWTFYW Copyright (C) 2015 Jean-Patrick Guerrero <jeanpatrick.guerrero@gmail.com>
+Since 20220217 MIT and CC-BY-SA-3.0[see LICENSE](LICENSE)
+The MIT applies to all code in this project that is not otherwise protected. [see LICENSE](LICENSE)
 The CC-BY-SA-3.0 license applies to textures and any other content in this project which is not source code.
 
