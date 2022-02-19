@@ -1,3 +1,6 @@
+-- main unit testing file that mineunit picks up
+-- https://github.com/S-S-X/mineunit
+
 require("mineunit")
 
 mineunit("core")

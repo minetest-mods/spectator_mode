@@ -1,3 +1,5 @@
+-- methods that mineunit has not yet implemented or will never implement but
+-- are needed by the unit tests.
 
 function vector.copy(v) return { x = v.x or 0, y = v.y or 0, z = v.z or 0 } end
 
