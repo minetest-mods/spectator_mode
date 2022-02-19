@@ -33,36 +33,12 @@ All the commands can be modified in settings, here they are listed with their de
 
 ## Settings
 
-All settings can be set in minetest.conf or accessed via mod with the global field of same name.
+All settings can be set in minetest.conf or accessed via mod with the global field of same name.<br>
+[See settingtypes.txt](settingtypes.txt)
 
-- **spectator_mode.command_accept** (smy)<br>
- After an invite has successfully been sent, the watcher may accept it with this command.
-- **spectator_mode.command_deny** (smn)<br>
- After an invite has successfully been sent, the watcher may decline it with this command.
-- **spectator_mode.command_detach** (unwatch)<br>
-To stop observing another player, issue this command.
-- **spectator_mode.extra_observe_privs** ()<br>
-Additional privs granted to observers. e.g. noclip,never_hungry
-- **spectator_mode.extra_observe_privs_moderator** (<spectator_mode.extra_observe_privs>)<br>
-Additional privs granted to observers that used '/watch' command. e.g. jail,kick,teleport<br>
-If left empty, will use spectator_mode.extra_observe_privs
-- **spectator_mode.command_invite** (watchme)<br>
-To invite another player to observe player that issued this command.
-- **spectator_mode.command_attach** (watch)<br>
-To start observing another player, issue this command.
-- **spectator_mode.invitation_timeout** (60)<br>
-Invitations invalidate after this many seconds if they haven't been accepted or denied.
-- *spectator_mode.keep_all_observers_alive*** (false)<br>
-Not only moderators are kept oxygenated, but all observers when this is set to true.<br>
-For auto-feeding the spectator_mode.keep_alive() function needs to be overriden by another mod.
-- **spectator_mode.priv_invite** (interact)<br>
-The priv needed to send observation invites.
-- **spectator_mode.priv_watch** (watch)<br>
-The priv needed to silently observe any player that isn't currently watching another one.
+## Privileges
 
-## Privelages
-
-Both privelages are registered if no other mod has already done so.
+Both privileges are registered if no other mod has already done so.
 
 ## Compatibility
 
@@ -73,8 +49,8 @@ conditions of when who can invite whom.
 Moderators are kept breathing when observing via '/watch' command. Other mods can override this to
 add more functionality: `spectator_mode.keep_alive(name_watcher)`.
 
-`spectator_mode.on_respawnplayer(watcher)` can be overriden to adjust what happens when an attached player
-dies and respawns. Without change, the observer is detached for a split second then re-atached.
+`spectator_mode.on_respawnplayer(watcher)` can be overidden to adjust what happens when an attached player
+dies and respawns. Without change, the observer is detached for a split second then re-attached.
 
 While attaching a player, his hud flags are mostly turned off. Other mods can override the behaviour
 with their own implementation of<br>
