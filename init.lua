@@ -484,10 +484,13 @@ function spectator_mode.on_respawnplayer(watcher)
 	local name_target = state.target
 	local name_watcher = watcher:get_player_name()
 	player_api.player_attached[name_watcher] = true
+	-- detach destroys invited entry, we need to restore that
 	if invited[name_watcher] then
 		detach(name_watcher)
+		-- mark as invited so players get info in chat on detach.
 		invited[name_watcher] = name_target
 	else
+		-- was a moderator using '/watch' -> conceal the spy.
 		detach(name_watcher)
 	end
 	after(.4, attach, name_watcher, name_target)
