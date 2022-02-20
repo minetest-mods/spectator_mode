@@ -11,7 +11,7 @@ spectator_mode.command_detach (Chatcommand to stop observing a player) string un
 spectator_mode.extra_observe_privs (Extra privs for observers) string
 
 #    Additional privs granted to observers that used '/watch' command. e.g. jail,kick,teleport
-#    If left empty will use spectator_mode.extra_observe_privs
+#    If left empty will use spectator_mode.extra_observe_privs (same table reference).
 spectator_mode.extra_observe_privs_moderator (Extra privs for observing moderators) string
 
 #    To invite another player to observe player that issued this command
