@@ -242,8 +242,13 @@ local function attach(name_watcher, name_target)
 		target = name_target,
 		visual_size = properties.visual_size,
 	}
-	local privs_extra = invites[name_watcher] and sm.extra_observe_privs
-		or sm.extra_observe_privs_moderator
+	local privs_extra
+	if invites[name_watcher] then
+		privs_extra = sm.extra_observe_privs
+	else
+		-- wasn't invited -> '/watch' used by moderator
+		privs_extra = sm.extra_observe_privs_moderator
+	end
 
 	for key, _ in pairs(privs_extra) do
 		state.privs_extra[key] = privs_watcher[key]
@@ -298,8 +303,10 @@ local function watch(name_watcher, name_target)
 
 	-- avoid infinite loops
 	-- TODO: should we just watch the watched one then? Griefers can be a nuisance both ways.
-	if original_state[name_target] then return true, '"' .. name_target .. '" is watching "'
-		.. original_state[name_target].target .. '". You may not watch a watcher.' end
+	if original_state[name_target] then
+		return true, '"' .. name_target .. '" is watching "'
+			.. original_state[name_target].target .. '". You may not watch a watcher.'
+	end
 
 	attach(name_watcher, name_target)
 	return true, 'Watching "' .. name_target .. '" at '
