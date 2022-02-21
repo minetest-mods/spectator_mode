@@ -31,8 +31,8 @@ do
 	for _, priv in ipairs(temp:split(',')) do
 		sm.extra_observe_privs[priv] = true
 	end
-	temp = minetest.settings:get('spectator_mode.extra_observe_privs_moderator')
-	if (not temp) or ('' == temp) then
+	temp = minetest.settings:get('spectator_mode.extra_observe_privs_moderator') or ''
+	if temp == '' then
 		-- if no extra settings for moderators are set, then the table for observers
 		-- is linked and both use the same table reference.
 		sm.extra_observe_privs_moderator = sm.extra_observe_privs
