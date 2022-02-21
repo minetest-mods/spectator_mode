@@ -45,6 +45,11 @@ do
 		end
 	end
 end
+if minetest.global_exists('beerchat') then
+	if 'function' == type(beerchat.has_player_muted_player) then
+		sm.beerchat_has_muted = beerchat.has_player_muted_player
+	end
+end
 -- pull some global references to local space
 local after = minetest.after
 local chat = minetest.chat_send_player
@@ -405,8 +410,7 @@ function spectator_mode.is_permited_to_invite(name_target, name_watcher)
 	end
 
 	-- check for beerchat mute/ignore
-	local meta = get_player_by_name(name_watcher):get_meta()
-	if 'true' == meta:get_string('beerchat:muted:' .. name_target) then
+	if sm.beerchat_has_muted and sm.beerchat_has_muted(name_watcher, name_target) then
 		return false
 	end
 
