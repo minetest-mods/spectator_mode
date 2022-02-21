@@ -50,24 +50,15 @@ if minetest.global_exists('beerchat') then
 		sm.beerchat_has_muted = beerchat.has_player_muted_player
 	end
 end
--- pull some global references to local space
-local after = minetest.after
-local chat = minetest.chat_send_player
-local core_log = minetest.log
-local deserialize = minetest.deserialize
-local serialize = minetest.serialize
-local get_player_privs = minetest.get_player_privs
-local set_player_privs = minetest.set_player_privs
-local get_player_by_name = minetest.get_player_by_name
-local vector_new = vector.new
-local vector_round = vector.round
 
 -- cache of saved states indexed by player name
 -- original_state['watcher'] = state
 local original_state = {}
+
 -- hash-table of pending invites
 -- invites['invited_player'] = 'inviting_player'
 local invites = {}
+
 -- hash-table for accepted invites.
 -- Used to determine whether watched gets notifiction when watcher detaches
 -- invited['invited_player'] = 'inviting_player'
@@ -103,7 +94,7 @@ local function original_state_get(player)
 	if state then return state end
 
 	-- fallback to player's meta
-	return deserialize(player:get_meta():get_string('spectator_mode:state'))
+	return minetest.deserialize(player:get_meta():get_string('spectator_mode:state'))
 end -- original_state_get
 
 
@@ -114,7 +105,7 @@ local function original_state_set(player, state)
 	original_state[player:get_player_name()] = state
 
 	-- backup to player's meta
-	player:get_meta():set_string('spectator_mode:state', serialize(state))
+	player:get_meta():set_string('spectator_mode:state', minetest.serialize(state))
 end -- original_state_set
 
 
@@ -130,7 +121,7 @@ end -- original_state_delete
 -- keep moderators alive when they used '/watch' command
 -- overridable as servers may want to change this
 function spectator_mode.keep_alive(name_watcher)
-	local watcher = get_player_by_name(name_watcher)
+	local watcher = minetest.get_player_by_name(name_watcher)
 	if not watcher then return end -- logged off
 
 	-- still attached?
@@ -140,7 +131,7 @@ function spectator_mode.keep_alive(name_watcher)
 	if 8 > watcher:get_breath() then
 		watcher:set_breath(9)
 	end
-	after(5, sm.keep_alive, name_watcher)
+	minetest.after(5, sm.keep_alive, name_watcher)
 end -- keep_alive
 
 
@@ -173,7 +164,7 @@ local function detach(name_watcher)
 	-- nothing to do
 	if not player_api.player_attached[name_watcher] then return end
 
-	local watcher = get_player_by_name(name_watcher)
+	local watcher = minetest.get_player_by_name(name_watcher)
 	if not watcher then return end -- shouldn't ever happen
 
 	watcher:set_detach()
@@ -197,7 +188,7 @@ local function detach(name_watcher)
 	})
 
 	-- restore privs
-	local privs = get_player_privs(name_watcher)
+	local privs = minetest.get_player_privs(name_watcher)
 	privs.interact = state.priv_interact
 	local privs_extra = invited[name_watcher] and sm.extra_observe_privs
 		or sm.extra_observe_privs_moderator
@@ -205,11 +196,11 @@ local function detach(name_watcher)
 	for key, _ in pairs(privs_extra) do
 		privs[key] = state.privs_extra[key]
 	end
-	set_player_privs(name_watcher, privs)
+	minetest.set_player_privs(name_watcher, privs)
 
 	-- set_pos seems to be very unreliable
 	-- this workaround helps though
-	after(0.1, function()
+	minetest.after(0.1, function()
 		watcher:set_pos(state.pos)
 		-- delete state only after actually moved.
 		-- this helps re-attach after log-off/server crash
@@ -219,11 +210,11 @@ local function detach(name_watcher)
 	-- if watcher was invited, notify invitee that watcher has detached
 	if invited[name_watcher] then
 		invited[name_watcher] = nil
-		chat(state.target, '"' .. name_watcher
-			.. '" has stopped looking over your shoulder.')
+		minetest.chat_send_player(state.target,
+			'"' .. name_watcher .. '" has stopped looking over your shoulder.')
 
 	end
-	core_log('action', '[spectator_mode] "' .. name_watcher
+	minetest.log('action', '[spectator_mode] "' .. name_watcher
 		.. '" detached from "' .. state.target .. '"')
 
 end -- detach
@@ -236,8 +227,8 @@ local function attach(name_watcher, name_target)
 	-- detach from cart, horse, bike etc.
 	detach(name_watcher)
 
-	local watcher = get_player_by_name(name_watcher)
-	local privs_watcher = get_player_privs(name_watcher)
+	local watcher = minetest.get_player_by_name(name_watcher)
+	local privs_watcher = minetest.get_player_privs(name_watcher)
 	-- back up some attributes
 	local properties = watcher:get_properties()
 	local state = {
@@ -273,22 +264,22 @@ local function attach(name_watcher, name_target)
 		collisionbox = { 0 }, -- TODO: is this the proper/best way?
 	})
 	watcher:set_nametag_attributes({ color = { a = 0 }, bgcolor = { a = 0 } })
-	local eye_pos = vector_new(0, -5, -20)
+	local eye_pos = vector.new(0, -5, -20)
 	watcher:set_eye_offset(eye_pos)
 	-- make sure watcher can't interact
 	privs_watcher.interact = nil
-	set_player_privs(name_watcher, privs_watcher)
+	minetest.set_player_privs(name_watcher, privs_watcher)
 	-- and attach
 	player_api.player_attached[name_watcher] = true
-	local target = get_player_by_name(name_target)
+	local target = minetest.get_player_by_name(name_target)
 	watcher:set_attach(target, '', eye_pos)
-	core_log('action', '[spectator_mode] "' .. name_watcher
+	minetest.log('action', '[spectator_mode] "' .. name_watcher
 		.. '" attached to "' .. name_target .. '"')
 
 	if sm.keep_all_observers_alive or (not invites[name_watcher]) then
 		-- server keeps all observers alive
 		-- or moderator used '/watch' to sneak up without invite
-		after(3, sm.keep_alive, name_watcher)
+		minetest.after(3, sm.keep_alive, name_watcher)
 	end
 end -- attach
 
@@ -305,7 +296,7 @@ local function watch(name_watcher, name_target)
 		return true, 'You may not watch yourself.'
 	end
 
-	local target = get_player_by_name(name_target)
+	local target = minetest.get_player_by_name(name_target)
 	if not target then
 		return true, 'Invalid target name "' .. name_target .. '"'
 	end
@@ -318,7 +309,7 @@ local function watch(name_watcher, name_target)
 
 	attach(name_watcher, name_target)
 	return true, 'Watching "' .. name_target .. '" at '
-		.. minetest.pos_to_string(vector_round(target:get_pos()))
+		.. minetest.pos_to_string(vector.round(target:get_pos()))
 
 end -- watch
 
@@ -327,8 +318,12 @@ local function invite_timed_out(name_watcher)
 	-- did the watcher already accept/decline?
 	if not invites[name_watcher] then return end
 
-	chat(invites[name_watcher], 'Invitation to "' .. name_watcher .. '" timed-out.')
-	chat(name_watcher, 'Invitation from "' .. invites[name_watcher] .. '" timed-out.')
+	minetest.chat_send_player(invites[name_watcher],
+		'Invitation to "' .. name_watcher .. '" timed-out.')
+
+	minetest.chat_send_player(name_watcher,
+		'Invitation from "' .. invites[name_watcher] .. '" timed-out.')
+
 	invites[name_watcher] = nil
 end -- invite_timed_out
 
@@ -367,7 +362,7 @@ local function watchme(name_target, param)
 			return '"' .. name_watcher .. '" has a pending invite, try again later.'
 		end
 
-		if not get_player_by_name(name_watcher) then
+		if not minetest.get_player_by_name(name_watcher) then
 			return '"' .. name_watcher .. '" is not online.'
 		end
 
@@ -377,9 +372,9 @@ local function watchme(name_target, param)
 
 		count_invites = count_invites + 1
 		invites[name_watcher] = name_target
-		after(sm.invitation_timeout, invite_timed_out, name_watcher)
+		minetest.after(sm.invitation_timeout, invite_timed_out, name_watcher)
 		-- notify invited
-		chat(name_watcher, '"' .. name_target .. invitation_postfix)
+		minetest.chat_send_player(name_watcher, '"' .. name_target .. invitation_postfix)
 
 		-- notify invitee
 		return 'You have invited "' .. name_watcher .. '".'
@@ -401,11 +396,11 @@ end -- watchme
 -- this function only checks privs etc. Mechanics are already checked in watchme()
 -- other mods can override and extend these checks
 function spectator_mode.is_permited_to_invite(name_target, name_watcher)
-	if get_player_privs(name_target)[sm.priv_watch] then
+	if minetest.get_player_privs(name_target)[sm.priv_watch] then
 		return true
 	end
 
-	if not get_player_privs(name_target)[sm.priv_invite] then
+	if not minetest.get_player_privs(name_target)[sm.priv_invite] then
 		return false
 	end
 
@@ -428,7 +423,9 @@ local function accept_invite(name_watcher)
 	attach(name_watcher, name_target)
 	invites[name_watcher] = nil
 	invited[name_watcher] = name_target
-	chat(name_target, '"' .. name_watcher .. '" is now attached to you.')
+	minetest.chat_send_player(name_target,
+		'"' .. name_watcher .. '" is now attached to you.')
+
 	return true, 'OK, you have been attached to "' .. name_target .. '". To disable type /'
 		.. sm.command_detach
 
@@ -441,7 +438,9 @@ local function decline_invite(name_watcher)
 		return true, 'There is no invite for you. Maybe it timed-out.'
 	end
 
-	chat(invites[name_watcher], '"' .. name_watcher .. '" declined the invite.')
+	minetest.chat_send_player(invites[name_watcher],
+		'"' .. name_watcher .. '" declined the invite.')
+
 	invites[name_watcher] = nil
 	return true, 'OK, declined invite.'
 end -- decline_invite
@@ -464,8 +463,8 @@ local function on_leaveplayer(watcher)
 	local name_watcher = watcher:get_player_name()
 	if invites[name_watcher] then
 		-- invitation exists for leaving player
-		chat(invites[name_watcher], 'Invitation to "' .. name_watcher
-			.. '" invalidated because of logout.')
+		minetest.chat_send_player(invites[name_watcher],
+			'Invitation to "' .. name_watcher .. '" invalidated because of logout.')
 
 		invites[name_watcher] = nil
 	end
@@ -507,7 +506,7 @@ function spectator_mode.on_respawnplayer(watcher)
 		-- was a moderator using '/watch' -> conceal the spy.
 		detach(name_watcher)
 	end
-	after(.4, attach, name_watcher, name_target)
+	minetest.after(.4, attach, name_watcher, name_target)
 	return true
 end -- on_respawnplayer
 
