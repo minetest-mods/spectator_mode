@@ -16,4 +16,5 @@ read_globals = {
 	-- Minetest
 	"minetest",
 	vector = { fields = { "copy", "new", "round" } },
+	beerchat = { fields = { "has_player_muted_player" } }
 }
