@@ -306,7 +306,6 @@ local function watch(name_watcher, name_target)
 	end
 
 	-- avoid infinite loops
-	-- TODO: should we just watch the watched one then? Griefers can be a nuisance both ways.
 	if original_state[name_target] then
 		return true, '"' .. name_target .. '" is watching "'
 			.. original_state[name_target].target .. '". You may not watch a watcher.'
