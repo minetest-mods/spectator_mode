@@ -12,6 +12,8 @@ mineunit('common/after')
 fixture('player_api')
 -- add some not yet included functions
 fixture('mineunit_extensions')
+-- mimic beerchat.has_player_muted_player
+fixture('beerchat')
 
 local function pd1(m) print(dump(m)) end
 local function pd(...) for _, m in ipairs({...}) do pd1(m) end end
