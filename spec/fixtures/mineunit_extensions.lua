@@ -1,8 +1,10 @@
 -- methods that mineunit has not yet implemented or will never implement but
 -- are needed by the unit tests.
 
+-- not needed with core 5.5.0 (possibly earlier)
 function vector.copy(v) return { x = v.x or 0, y = v.y or 0, z = v.z or 0 } end
 
+-- not needed with core 5.5.0 (possibly earlier)
 function vector.zero() return { x = 0, y = 0, z = 0 } end
 
 function Player:hud_get_flags()
