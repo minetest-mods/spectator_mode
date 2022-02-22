@@ -446,6 +446,17 @@ local function decline_invite(name_watcher)
 end -- decline_invite
 
 
+local function unwatch(name_watcher)
+	-- nothing to do
+	if not player_api.player_attached[name_watcher] then
+		return true, 'You are not observing anybody.'
+	end
+
+	detach(name_watcher)
+	return true -- no message as that has been sent by detach()
+end -- unwatch
+
+
 local function on_joinplayer(watcher)
 	local state = original_state_get(watcher)
 	if not state then return end
@@ -522,7 +533,7 @@ minetest.register_chatcommand(sm.command_attach, {
 minetest.register_chatcommand(sm.command_detach, {
 	description = 'Unwatch a player',
 	privs = { },
-	func = detach,
+	func = unwatch,
 })
 
 
