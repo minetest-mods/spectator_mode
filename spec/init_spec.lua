@@ -99,11 +99,21 @@ describe('Watching:', function()
 	end)
 
 	it('boss tries to unwatch when not watching', function()
-		-- hmm, this is rather pointless as it's noop if player isn't attached
 		reset_chatlog()
 		boss:send_chat_message('/unwatch')
 		mineunit:execute_globalstep(1)
-		assert.equals(0, #chatlog, 'there was an error message sent to boss')
+		assert.equals(1, #chatlog, 'unexpected chatlog count')
+		assert.is_not_nil(chatlog[1].message:find('not observing'),
+			'unexpected chat response')
+	end)
+
+	it('player receives message when issuing /unwatch while not attached', function()
+		reset_chatlog()
+		dude1:send_chat_message('/unwatch')
+		mineunit:execute_globalstep(1)
+		assert.equals(1, #chatlog, 'unexpected chatlog count')
+		assert.is_not_nil(chatlog[1].message:find('not observing'),
+			'unexpected chat response')
 	end)
 
 	it('invitations are sent and expire', function()
