@@ -1,0 +1,36 @@
+#    After an invite has successfully been sent, the watcher needs to accept with this command.
+spectator_mode.command_accept (Chatcommand to accept an invitation) string smy
+
+#    After an invite has successfully been sent, the watcher may decline it with this command.
+spectator_mode.command_deny (Chatcommand to deny an invitation) string smn
+
+#    To stop observing another player, issue this command
+spectator_mode.command_detach (Chatcommand to stop observing a player) string unwatch
+
+#    Additional privs granted to observers. e.g. noclip,never_hungry
+spectator_mode.extra_observe_privs (Extra privs for observers) string
+
+#    Additional privs granted to observers that used '/watch' command. e.g. jail,kick,teleport
+#    If left empty will use spectator_mode.extra_observe_privs (same table reference).
+spectator_mode.extra_observe_privs_moderator (Extra privs for observing moderators) string
+
+#    To invite another player to observe player that issued this command
+spectator_mode.command_invite (Chatcommand to invite other player) string watchme
+
+#    To start observing another player, issue this command
+spectator_mode.command_attach (Chatcommand to start observing a player) string watch
+
+#    Invitations invalidate after this many seconds if they haven't been accepted or denied
+spectator_mode.invitation_timeout (Duration invites are valid for in seconds) int 60
+
+#    Not only moderators are kept oxygenated, but all observers when this is set to true.
+#    For auto-feeding the spectator_mode.keep_alive() function needs to be overridden by
+#    another mod.
+spectator_mode.keep_all_observers_alive (Keep all observers alive) bool false
+
+#    The priv needed to send observation invites.
+spectator_mode.priv_invite (Player priv to invite others to observe) string interact
+
+#    The priv needed to silently observe any player that isn't currently watching another one
+spectator_mode.priv_watch (Moderator priv to watch any player) string watch
+
