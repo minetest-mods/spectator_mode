@@ -15,7 +15,6 @@ Normal players can also invite others to observe them.
 ## Dependencies
 
 - `player_api` (included in [`minetest_game`](https://github.com/minetest/minetest_game))
-- `default` (included in [`minetest_game`](https://github.com/minetest/minetest_game))
 
 ## Requirements
 
