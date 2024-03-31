@@ -185,6 +185,7 @@ local function detach(name_watcher)
 		visual_size = state.visual_size,
 		makes_footstep_sound = state.makes_footstep_sound,
 		collisionbox = state.collisionbox,
+		show_on_minimap = state.show_on_minimap or true, -- or minetest default for players
 	})
 
 	-- restore privs
@@ -236,6 +237,7 @@ local function attach(name_watcher, name_target)
 		hud_flags = watcher:hud_get_flags(),
 		makes_footstep_sound = properties.makes_footstep_sound,
 		nametag = watcher:get_nametag_attributes(),
+		show_on_minimap = properties.show_on_minimap,
 		pos = watcher:get_pos(),
 		priv_interact = privs_watcher.interact,
 		privs_extra = {},
@@ -262,6 +264,7 @@ local function attach(name_watcher, name_target)
 		visual_size = { x = 0, y = 0 },
 		makes_footstep_sound = false,
 		collisionbox = { 0 }, -- TODO: is this the proper/best way?
+		show_on_minimap = false,
 	})
 	watcher:set_nametag_attributes({ color = { a = 0 }, bgcolor = { a = 0 } })
 	local eye_pos = vector.new(0, -5, -20)
